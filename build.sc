@@ -36,6 +36,7 @@ class arithmetic extends ScalaModule with ScalafmtModule with PublishModule { m 
     ivy"com.github.ktakagaki.breeze::breeze:latest.integration",
     ivy"com.github.ktakagaki.breeze::breeze-natives:latest.integration",
     ivy"org.scalanlp::breeze-viz:latest.integration",
+    ivy"org.typelevel::spire:latest.integration"
   )
 
   object tests extends Tests {
