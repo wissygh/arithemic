@@ -33,9 +33,7 @@ class arithmetic extends ScalaModule with ScalafmtModule with PublishModule { m 
     getVersion("chiseltest"),
     ivy"com.lihaoyi::upickle:latest.integration",
     ivy"com.lihaoyi::os-lib:latest.integration",
-    ivy"com.github.ktakagaki.breeze::breeze:latest.integration",
-    ivy"com.github.ktakagaki.breeze::breeze-natives:latest.integration",
-    ivy"org.scalanlp::breeze-viz:latest.integration",
+    ivy"io.github.cibotech::evilplot:latest.integration",
     ivy"org.typelevel::spire:latest.integration"
   )
 
