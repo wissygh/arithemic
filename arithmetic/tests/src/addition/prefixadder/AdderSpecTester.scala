@@ -1,41 +1,25 @@
-package adder.tests
+package addition.prefixadder
 
-
-import arithmetic.addition.prefixadder.PrefixAdder
-import arithmetic.addition.prefixadder.common.{RippleCarryAdder, RippleCarry3Adder, KoggeStoneAdder, BrentKungAdder}
-import chisel3._
-import chisel3.tester._
+import addition.prefixadder.common.{BrentKungAdder, KoggeStoneAdder, RippleCarry3Adder, RippleCarryAdder}
+import chiseltest.formal.BoundedCheck
+import formal.FormalSuite
 import utest._
 
-trait HasAdderSpec {
-  def AdderSpec(dut: PrefixAdder): Unit = {
-    val max: Int = (1 << dut.width) - 1
-    (0 to max).map { a =>
-      (0 to max).map { b =>
-        dut.io.a.poke(a.U)
-        dut.io.b.poke(b.U)
-        dut.io.z.expect((a+b).U)
-        dut.clock.step()
-      }
-    }
-  }
-}
-
-object AdderSpecTester extends ChiselUtestTester with HasAdderSpec {
+object AdderSpecTester extends FormalSuite {
   val width = 8
   // TODO: utest only support static test(cannot use map function), maybe we can try to use macro to implement this.
   val tests: Tests = Tests {
     test("ripple carry should pass") {
-      testCircuit(new RippleCarryAdder(width))(AdderSpec)
+      verify(new RippleCarryAdder(width), Seq(BoundedCheck(1)))
     }
     test("ripple carry 3 fan-in should pass") {
-      testCircuit(new RippleCarry3Adder(width))(AdderSpec)
+      verify(new RippleCarry3Adder(width), Seq(BoundedCheck(1)))
     }
     test("kogge stone should pass") {
-      testCircuit(new KoggeStoneAdder(width))(AdderSpec)
+      verify(new KoggeStoneAdder(width), Seq(BoundedCheck(1)))
     }
     test("brent kung should pass") {
-      testCircuit(new BrentKungAdder(width))(AdderSpec)
-    }
+      verify(new BrentKungAdder(width), Seq(BoundedCheck(1)))
+   }
   }
 }

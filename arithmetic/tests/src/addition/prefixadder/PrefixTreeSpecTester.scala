@@ -1,10 +1,9 @@
-package adder.tests
+package addition.prefixadder
 
-
-import arithmetic.addition.prefixadder.PrefixAdder
-import arithmetic.addition.prefixadder.common.CommonPrefixSum
-import arithmetic.addition.prefixadder.graph.{HasPrefixSumWithGraphImp, PrefixGraph, PrefixNode}
-import chisel3.tester._
+import addition.prefixadder.common.CommonPrefixSum
+import addition.prefixadder.graph.{HasPrefixSumWithGraphImp, PrefixGraph, PrefixNode}
+import chiseltest.formal.BoundedCheck
+import formal.FormalSuite
 import utest._
 
 /** This adder is same with BrentKungSum8*/
@@ -33,7 +32,7 @@ object BrentKungSum8ByGraph extends HasPrefixSumWithGraphImp with CommonPrefixSu
 
 class DemoPrefixAdderWithGraph extends PrefixAdder(BrentKungSum8ByGraph.prefixGraph.width, BrentKungSum8ByGraph)
 
-object PrefixTreeSpecTester extends ChiselUtestTester with HasAdderSpec {
+object PrefixTreeSpecTester extends FormalSuite {
 
   val zeroLayer = Seq.tabulate(4)(PrefixNode(_))
   val node1 = PrefixNode(zeroLayer(0), zeroLayer(1))
@@ -42,6 +41,15 @@ object PrefixTreeSpecTester extends ChiselUtestTester with HasAdderSpec {
   val node4 = PrefixNode(zeroLayer(2), node1)
 
   val tests: Tests = Tests {
+    test("should serialize PrefixGraph") {
+      assert(os.read(os.resource / "graph.dot") == BrentKungSum8ByGraph.prefixGraph.toString)
+    }
+    test("should deserialize PrefixGraph and generate correct adder.") {
+      val d = new CommonPrefixSum with HasPrefixSumWithGraphImp {
+        val prefixGraph: PrefixGraph = PrefixGraph(os.resource / "graph.json")
+      }
+      verify(new PrefixAdder(d.prefixGraph.width, d), Seq(BoundedCheck(1)))
+    }
     test("should abort in PrefixNode generation") {
       try {
         PrefixNode(zeroLayer(2), node2)
@@ -51,7 +59,7 @@ object PrefixTreeSpecTester extends ChiselUtestTester with HasAdderSpec {
       }
     }
     test("DemoPrefixAdderWithGraph should pass test") {
-      testCircuit(new DemoPrefixAdderWithGraph)(AdderSpec)
+      verify(new DemoPrefixAdderWithGraph, Seq(BoundedCheck(1)))
     }
     test("should generate graphML file") {
       os.write.over(os.pwd / "PrefixGraph.dot", PrefixGraph(zeroLayer.toSet + node1 + node2 + node3 + node4).toString)

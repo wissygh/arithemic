@@ -1,7 +1,8 @@
-package arithmetic.addition.prefixadder.graph
+package addition.prefixadder.graph
 
-import arithmetic.addition.prefixadder._
-import arithmetic.addition.prefixadder.common._
+import addition.prefixadder.PrefixAdder
+import addition.prefixadder.common.CommonPrefixSum
+
 import scala.util.matching.Regex
 import os._
 
@@ -13,7 +14,7 @@ case class PrefixGraph(nodes: Seq[PrefixNode]) {
       node.fathers.map { father =>
         s""""${father.toString}" -> "${node.toString}";"""
       }
-    }).reduce(_ + "\n" + _) + "\n}"
+    }).mkString("\n") + "\n}"
 
   def width: Int = nodes.map(_.bit).max + 1
 
@@ -30,12 +31,12 @@ case class PrefixGraph(nodes: Seq[PrefixNode]) {
 object PrefixGraph {
   def apply(nodes: Set[PrefixNode]): PrefixGraph = new PrefixGraph(nodes.toSeq.sorted)
 
-  def apply(path: Path): PrefixGraph = {
+  def apply(path: ReadablePath): PrefixGraph = {
     val dotGraph: DotGraph = upickle.default.read[DotGraph](os.read(path))
-    val pattern:  Regex = "Node([0-9]+)-([0-9]+)".r
+    val pattern:  Regex = "Node([0-9]+)-([0-9]+)-([0-9]+)".r
     var dotMap:   Map[Int, PrefixNode] = Map[Int, PrefixNode]()
     dotGraph.nodes.map { dotNode =>
-      val pattern(level, bit) = dotNode.name
+      val pattern(level, bit, _) = dotNode.name
       (dotNode.index, level.toInt, bit.toInt)
     }
       .sortBy(_._1)
