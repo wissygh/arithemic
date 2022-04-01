@@ -49,6 +49,7 @@ object PrefixTreeSpecTester extends FormalSuite {
         val prefixGraph: PrefixGraph = PrefixGraph(os.resource / "graph.json")
       }
       verify(new PrefixAdder(d.prefixGraph.width - 1, d), Seq(BoundedCheck(1)))
+
     }
     test("should abort in PrefixNode generation") {
       try {

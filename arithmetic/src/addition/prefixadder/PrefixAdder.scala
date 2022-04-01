@@ -46,8 +46,13 @@ class PrefixAdder(val width: Int, prefixSum: PrefixSum) extends FullAdder {
   override val desiredName: String = this.getClass.getSimpleName + width.toString
 
   // Split up bit vectors into individual bits
+<<<<<<< HEAD
   val as: Seq[Bool] = cin +: a.asBools
   val bs: Seq[Bool] = cin +: b.asBools
+=======
+  val as: Seq[Bool] = a.asBools
+  val bs: Seq[Bool] = b.asBools
+>>>>>>> f3cb464a2eed5a8c2a886c07fa25e0e8314cd460
 
   /** Type of pair is P and G
     * @todo How to abstract this with Ling Adder?
@@ -66,8 +71,12 @@ class PrefixAdder(val width: Int, prefixSum: PrefixSum) extends FullAdder {
   val sum: Seq[Bool] = ps.zip(cs).map { case (p, c) => p ^ c }
 
   // Recombine bits into bitvector
+<<<<<<< HEAD
   val s: UInt = VecInit(sum).asUInt
 
   cout := s.head(1)
   z := s(width, 1)
+=======
+  z := VecInit(sum).asUInt
+>>>>>>> f3cb464a2eed5a8c2a886c07fa25e0e8314cd460
 }

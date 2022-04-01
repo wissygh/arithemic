@@ -7,6 +7,7 @@ import utest._
 object WallaceMultiplierTester extends FormalSuite {
   val tests: Tests = Tests {
     test("wallace signed multiplier 1") {
+
       verify(new SignedWallaceMultiplier(1, 1)(), Seq(BoundedCheck(1)))
     }
     test("wallace signed multiplier 4") {
@@ -38,6 +39,7 @@ object WallaceMultiplierTester extends FormalSuite {
     }
     test("wallace unsigned multiplier 7,4") {
       verify(new UnsignedWallaceMultiplier(7, 4)(), Seq(BoundedCheck(1)))
+
     }
   }
 }

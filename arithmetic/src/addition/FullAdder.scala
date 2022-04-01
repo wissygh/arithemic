@@ -1,7 +1,9 @@
 package addition
 
 import chisel3._
+
 import chisel3.util.Cat
+
 
 trait FullAdder extends Module {
   val width: Int
@@ -14,4 +16,5 @@ trait FullAdder extends Module {
   val cout: Bool = IO(Output(Bool()))
 
   assert(a +& b + cin === Cat(cout, z))
+
 }
